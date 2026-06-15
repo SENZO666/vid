@@ -9,6 +9,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useAuth } from "@/src/auth/context";
 import { useToast } from "@/src/components/Toast";
+import { seedDemo } from "@/src/dev/seedDemo";
 import { exportExpensesCsv } from "@/src/export/csv";
 import { palette, radii, spacing, typography } from "@/src/theme";
 import { endOfToday, firstOfThisMonth } from "@/src/utils/date";
@@ -27,6 +28,22 @@ export default function SettingsScreen() {
   const router = useRouter();
   const toast = useToast();
   const [exporting, setExporting] = useState(false);
+  const [seeding, setSeeding] = useState(false);
+
+  const onSeedDemo = async () => {
+    if (!session || seeding) return;
+    setSeeding(true);
+    try {
+      const res = await seedDemo(session.userId);
+      toast({
+        kind: "success",
+        title: res.added > 0 ? `Seeded ${res.added} demo expenses` : "Demo data already loaded",
+        subtitle: "Goal set to R3 000 – R8 000 for the month.",
+      });
+    } finally {
+      setSeeding(false);
+    }
+  };
 
   const onExport = async () => {
     if (!session || exporting) return;
@@ -88,6 +105,14 @@ export default function SettingsScreen() {
       description: "Share all your expenses as a spreadsheet.",
       onPress: onExport,
       testID: "settings-export",
+    },
+    {
+      key: "demo",
+      icon: "sparkles-outline",
+      label: seeding ? "Loading demo data…" : "Load demo data",
+      description: "One-tap setup for a polished demo (categories, expenses, goals).",
+      onPress: onSeedDemo,
+      testID: "settings-seed-demo",
     },
   ];
 

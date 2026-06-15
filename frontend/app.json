@@ -51,7 +51,8 @@
           "photosPermission": "Attach receipt photos to your expenses",
           "cameraPermission": "Capture receipt photos for your expenses"
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
