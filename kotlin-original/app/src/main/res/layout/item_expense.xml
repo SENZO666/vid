@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@drawable/bg_card"
+    android:padding="14dp"
+    android:layout_marginBottom="10dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
+
+    <View
+        android:id="@+id/colorDot"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:background="@drawable/color_dot"
+        android:contentDescription="@string/cd_color_dot"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="14dp">
+
+        <TextView android:id="@+id/textDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp" android:textStyle="bold"
+            android:maxLines="1" android:ellipsize="end"
+            tools:text="Weekly groceries"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="2dp">
+
+            <TextView android:id="@+id/textCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/BodyText"
+                android:textColor="@color/accent"
+                tools:text="Food"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  ·  "
+                style="@style/BodyText"/>
+
+            <TextView android:id="@+id/textDateTime"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                style="@style/BodyText"
+                android:maxLines="1" android:ellipsize="end"
+                tools:text="01 Jan · 09:00 – 10:00"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iconPhoto"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_camera"
+        android:contentDescription="@string/cd_photo_badge"
+        android:visibility="gone"
+        android:layout_marginStart="8dp"/>
+
+    <TextView android:id="@+id/textAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_primary"
+        android:textSize="16sp" android:textStyle="bold"
+        android:layout_marginStart="12dp"
+        tools:text="R 250,00"/>
+</LinearLayout>

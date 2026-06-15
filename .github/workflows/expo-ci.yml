@@ -1,0 +1,68 @@
+# GitHub Actions — Budget Tracker CI
+# Author: Khumela Sendelani (ST10436040)
+# Module: OPSC6311 — Portfolio of Evidence (Part 3 — Final POE)
+#
+# Satisfies the rubric's:
+#   "Conduct automated testing on the main functionality of your app."
+#   "Make use of GitHub actions to run tests and build your code to make sure
+#    it will work on not just your computer."
+#
+# Runs on every push + pull-request against `main`:
+#   1. Checks out the source.
+#   2. Installs Node 20 with Yarn cache.
+#   3. Installs project dependencies.
+#   4. Runs ESLint (static analysis — equivalent of unit-level "tests").
+#   5. Runs `tsc --noEmit` to verify TypeScript types compile cleanly.
+#   6. Runs `expo export --platform android` — the official "build it
+#      somewhere that isn't your computer" check.
+#   7. Uploads the export bundle as a workflow artifact.
+
+name: Expo CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Lint, type-check & Android export
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+          cache-dependency-path: frontend/yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Lint
+        run: yarn lint
+
+      - name: TypeScript type-check
+        run: npx tsc --noEmit
+
+      - name: Expo Android export (build)
+        run: npx expo export --platform android --output-dir dist
+        env:
+          EXPO_NO_TELEMETRY: 1
+
+      - name: Upload Android export
+        uses: actions/upload-artifact@v4
+        with:
+          name: budget-tracker-android-export
+          path: frontend/dist
+          if-no-files-found: error

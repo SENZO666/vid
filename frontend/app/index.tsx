@@ -1,30 +1,22 @@
-import { Text, View, StyleSheet, Image } from "react-native";
+import { Redirect, type Href } from "expo-router";
+import { ActivityIndicator, View } from "react-native";
 
-const EXPO_PUBLIC_BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
+import { useAuth } from "@/src/auth/context";
+import { palette } from "@/src/theme";
 
 export default function Index() {
-  console.log(EXPO_PUBLIC_BACKEND_URL, "EXPO_PUBLIC_BACKEND_URL");
+  const { session, loading } = useAuth();
 
-  return (
-    <View style={styles.container}>
-      <Image
-        source={require("../assets/images/app-image.png")}
-        style={styles.image}
-      />
-    </View>
-  );
+  if (loading) {
+    return (
+      <View
+        style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: palette.bg }}
+        testID="auth-loading"
+      >
+        <ActivityIndicator color={palette.primary} size="large" />
+      </View>
+    );
+  }
+  if (session) return <Redirect href={"/(tabs)" as Href} />;
+  return <Redirect href={"/(auth)/login" as Href} />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#0c0c0c",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  image: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "contain",
-  },
-});

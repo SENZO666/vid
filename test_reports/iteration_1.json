@@ -1,0 +1,63 @@
+{
+  "summary": "Frontend-only E2E run on the Expo web preview (https://app-builder-kit-15.preview.emergentagent.com) at mobile viewport 390x844. All 15 test items in the review request are functionally working: register/login flow, dashboard empty state and goal band, categories CRUD with seeded Food/Transport/Entertainment, goals min/max persistence, add expense with category picker and default date/times, expense list with period filter, expense detail with delete, recurring expense template, analytics (gauge + bar chart with Min/Max dashed lines + per-category totals), 5/10 badges unlocked (First Steps + Goal Setter included), settings menu with all 7 items, sign out + re-sign in with data preserved, and wrong-password toast. One UX race-condition observed: starter categories may briefly show empty state if user opens Categories immediately after register (seeding runs after router.replace). Bottom-tab tabBarTestID does NOT surface as data-testid on web (react-navigation web limitation) — had to fall back to mouse coordinates for the centre + tab; this is a test-harness friction point worth noting for future automation.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "register.tsx + auth/context.tsx",
+        "issue": "Starter category seeding races against router.replace('/(tabs)'). authRegister() persists the session, context.register() awaits refresh() and immediately calls router.replace, after which the register screen tries to seed Food/Transport/Entertainment via addCategory(). If the user taps the Categories quick-link within ~1-2 seconds, they see the 'No categories yet' empty state. Reproduced once on a 'cold' run; fixed itself after wait_for_timeout(3000). Reference: /app/frontend/app/(auth)/register.tsx:42-57.",
+        "testID": "quick-categories",
+        "priority": "LOW"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {
+        "screen": "Bottom tab bar",
+        "issues": [
+          "tabBarTestID values ('tab-home', 'tab-expenses', 'tab-add', 'tab-analytics', 'tab-settings') in app/(tabs)/_layout.tsx do NOT render as data-testid on the web bundle (react-navigation bottom tabs strips tabBarTestID on web). This prevents Playwright from selecting tabs by testID and forced the test to click by coordinate. Consider wrapping with a custom tabBar that surfaces testID, or document the limitation."
+        ]
+      }
+    ],
+    "react_native_issues": [
+      {
+        "component": "Animated.useNativeDriver warning",
+        "issue": "Console: 'Animated: useNativeDriver is not supported because the native animated module is missing. Falling back to JS-based animation.' Reference: components that use Animated (likely Toast/MonthlyProgressGauge). This is expected on web preview but worth flagging for native test build."
+      },
+      {
+        "component": "Deprecated style props (web bundle)",
+        "issue": "Console: 'shadow* style props are deprecated. Use boxShadow' and 'props.pointerEvents is deprecated. Use style.pointerEvents'. Likely coming from older RN/RNW versions — non-blocking but worth a sweep."
+      }
+    ]
+  },
+  "test_report_links": [
+    "/tmp/r4_dash_with_goal.png",
+    "/tmp/r4_expenses.png",
+    "/tmp/r4_recurring.png",
+    "/tmp/r4_analytics.png",
+    "/tmp/r4_rewards.png"
+  ],
+  "action_items": [
+    "Make starter-category seeding deterministic. Two options: (a) run STARTER_CATEGORIES seeding inside auth/index.ts register() BEFORE persistSession, so it is awaited before context.refresh + router.replace; or (b) move the seeding into AuthProvider.register() (auth/context.tsx) and await it before router.replace('/(tabs)').",
+    "Optional: Surface the bottom tab testIDs in DOM. Either implement a custom tabBar in app/(tabs)/_layout.tsx (using bottomTabs `tabBar` prop) that adds testID on a wrapping Pressable, or document for testing that mouse-coordinate taps are required on web.",
+    "Optional: Clean up legacy 'shadow*' style props and props.pointerEvents to silence RNW deprecation warnings."
+  ],
+  "critical_code_review_comments": [
+    "register.tsx duplicates business logic (starter category seeding) that ideally belongs in the auth layer. Centralising it in src/auth/index.ts register() would avoid the race and remove the dynamic import workaround.",
+    "queries.web.ts and queries.ts are dual-implementations. Acceptable for the Expo native + web split, but ensure tests cover both surfaces. Web preview only exercises queries.web.ts.",
+    "auth/index.ts: SHA-256 x 10000 with per-user 16-byte salt — matches Kotlin spec. Iteration count is fine for offline-only but synchronous loop on JS thread (await Crypto.digestStringAsync inside for-loop) takes ~hundreds of ms on web; not a bug, just noting it can momentarily block UI on slow devices."
+  ],
+  "updated_files": [],
+  "success_rate": {
+    "backend": "N/A (frontend-only request)",
+    "frontend": "100% of the 15 review-request items pass functionally; 1 LOW-severity race condition observed once and self-recovered on the second attempt."
+  },
+  "seed_data_creation": "Two fresh local accounts created on the web AsyncStorage (tester52245, tester371810) with hello123. They live only in the test browser context and are wiped when the browser context is destroyed.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "App is offline-only Expo/React Native with AsyncStorage-backed fallback on web (queries.web.ts). Web tests can't sign in across browser-context boundaries (each automation run starts with empty AsyncStorage), so end-to-end flows including 'sign out → sign in' must happen in a single Playwright session. Bottom tabs can't be selected by data-testid on web — use mouse.click at approx y=815 with x=39 (home), 117 (expenses), 195 (add), 273 (analytics), 351 (settings) for a 390-wide viewport. Starter-categories seeding has a known race after register; sleep ~3 s before navigating to Categories.",
+  "rca_of_issue": "Starter-categories empty-state race: in app/(auth)/register.tsx the call sequence is `await register(username, password)` (which inside src/auth/context.tsx awaits refresh() and then router.replace('/(tabs)')), then `await import('@/src/auth')` + getSession + for-loop addCategory. Because router.replace fires before the seeding loop, the register screen is unmounted while the seeding promise is still running. If the new user immediately taps 'Categories' on the dashboard, the queries.web.ts read happens before the writes have flushed to AsyncStorage. Mitigation: move STARTER_CATEGORIES seeding into src/auth/index.ts register() right after createUserRow and before persistSession, so it is fully awaited before context.refresh re-renders and routes."
+}
