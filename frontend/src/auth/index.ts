@@ -8,6 +8,7 @@
 import * as Crypto from "expo-crypto";
 
 import {
+  addCategory as addCategoryRow,
   createUser as createUserRow,
   findUserByUsername,
   type User,
@@ -17,6 +18,15 @@ import { storage } from "../utils/storage";
 const ITERATIONS = 10000;
 const SESSION_USER_ID = "bt.session.userId";
 const SESSION_USERNAME = "bt.session.username";
+
+// Default colour-coded categories we seed for brand-new accounts so users
+// have somewhere to log their first expense without having to add categories
+// first. Mirrors what new users get on a fresh Kotlin install.
+const STARTER_CATEGORIES: { name: string; colorHex: string }[] = [
+  { name: "Food", colorHex: "#D87E6A" },
+  { name: "Transport", colorHex: "#6EA4D8" },
+  { name: "Entertainment", colorHex: "#A58BA8" },
+];
 
 function bytesToHex(bytes: Uint8Array): string {
   return Array.from(bytes)
@@ -54,6 +64,15 @@ export async function register(
   const salt = await randomSalt();
   const passwordHash = await hashPassword(password, salt);
   const userId = await createUserRow(u, passwordHash, salt);
+  // Seed the starter categories synchronously so the user never lands on
+  // an empty Categories screen if they navigate there immediately.
+  for (const c of STARTER_CATEGORIES) {
+    try {
+      await addCategoryRow(userId, c.name, c.colorHex);
+    } catch {
+      /* duplicate or migration race — non-fatal */
+    }
+  }
   await persistSession(userId, u);
   return { ok: true, userId };
 }

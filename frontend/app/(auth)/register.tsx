@@ -15,14 +15,7 @@ import { useAuth } from "@/src/auth/context";
 import { Field } from "@/src/components/Field";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { useToast } from "@/src/components/Toast";
-import { addCategory } from "@/src/db/queries";
-import { categoryColors, palette, radii, spacing, typography } from "@/src/theme";
-
-const STARTER_CATEGORIES = [
-  { name: "Food", color: categoryColors[1] },
-  { name: "Transport", color: categoryColors[2] },
-  { name: "Entertainment", color: categoryColors[4] },
-];
+import { palette, radii, spacing, typography } from "@/src/theme";
 
 export default function RegisterScreen() {
   const { register } = useAuth();
@@ -39,21 +32,6 @@ export default function RegisterScreen() {
       toast({ kind: "error", title: "Could not register", subtitle: res.error });
       setBusy(false);
       return;
-    }
-    // Seed a few starter categories so the new user has somewhere to log to.
-    try {
-      // The register call has already created a session, so we can grab it via
-      // a tiny side-effect: just call addCategory with the freshly-created
-      // user id from the session. We refetch via context.
-      const { getSession } = await import("@/src/auth");
-      const s = await getSession();
-      if (s) {
-        for (const c of STARTER_CATEGORIES) {
-          try { await addCategory(s.userId, c.name, c.color); } catch { /* duplicate name */ }
-        }
-      }
-    } catch (e) {
-      console.warn("seed starter categories failed", e);
     }
     toast({ kind: "success", title: "Account created", subtitle: "Welcome to Budget Tracker." });
     setBusy(false);
