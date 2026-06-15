@@ -6,6 +6,7 @@ on your Android phone. Open the files in this order:
 
 | File                          | What's inside                                                                                    |
 | ----------------------------- | ------------------------------------------------------------------------------------------------ |
+| `reference-walkthrough.mp4`   | **⭐ Silent reference video** — auto-recorded screen capture of the entire demo, with intro + outro cards. 1:57, 540×1170 portrait, ~1 MB. Use as a visual cue while you record on your real phone. |
 | `01-voiceover-script.md`      | Word-for-word narration broken into 8 sections w/ target durations and pronunciation tips.       |
 | `02-shot-list.md`             | Storyboard — every tap, every wait, every on-screen caption, ordered to match the script.        |
 | `03-recording-checklist.md`   | Phone setup, install options, OBS configuration, HandBrake compression, upload steps.            |
