@@ -1,0 +1,118 @@
+{
+  "theme_and_archetype": {
+    "theme": "Light",
+    "archetype": "Archetype 1 (Organic & Earthy)",
+    "description": "A sophisticated, trustworthy finance app that breaks away from the generic 'tech-blue' and 'neon-dark' fintech tropes. It uses earthy, organic tones to evoke stability, growth, and calm.",
+    "vibe": "Grounded, matte, tactile, and highly legible. Focused on data clarity and user encouragement."
+  },
+  "colors": {
+    "light": {
+      "background": "#FAF9F6",
+      "foreground": "#1A1D1C",
+      "primary": "#2C5545",
+      "primary_foreground": "#FFFFFF",
+      "secondary": "#E8EFEA",
+      "secondary_foreground": "#2C5545",
+      "accent": "#D87E6A",
+      "accent_foreground": "#FFFFFF",
+      "destructive": "#C94F4F",
+      "destructive_foreground": "#FFFFFF",
+      "muted": "#F0F0ED",
+      "muted_foreground": "#6C7470",
+      "card": "#FFFFFF",
+      "card_foreground": "#1A1D1C",
+      "border": "#E2E4E2",
+      "ring": "#2C5545"
+    },
+    "dark": {
+      "background": "#141615",
+      "foreground": "#F2F4F3",
+      "primary": "#48826C",
+      "primary_foreground": "#FFFFFF",
+      "secondary": "#212B26",
+      "secondary_foreground": "#A8C4B6",
+      "accent": "#E48E7B",
+      "accent_foreground": "#141615",
+      "destructive": "#E06868",
+      "destructive_foreground": "#FFFFFF",
+      "muted": "#232725",
+      "muted_foreground": "#9CA39F",
+      "card": "#1A1D1C",
+      "card_foreground": "#F2F4F3",
+      "border": "#2E3331",
+      "ring": "#48826C"
+    },
+    "chart_palette": [
+      "#D87E6A",
+      "#6EA4D8",
+      "#8BA89D",
+      "#D8AC6A",
+      "#A58BA8"
+    ],
+    "guidelines": "Avoid full-screen gradients. Use matte, solid backgrounds. Ensure minimum 4.5:1 contrast for text. Use the 'Tinted Grey' rule: neutrals are slightly tinted green/warm."
+  },
+  "typography": {
+    "fonts": {
+      "headings": "Manrope, sans-serif",
+      "body": "Figtree, sans-serif"
+    },
+    "scale": {
+      "h1": "text-3xl sm:text-4xl font-bold tracking-tight",
+      "h2": "text-2xl sm:text-3xl font-semibold tracking-tight",
+      "h3": "text-xl font-medium",
+      "body": "text-base leading-relaxed",
+      "small": "text-sm text-muted-foreground",
+      "overline": "text-xs font-bold uppercase tracking-[0.2em]"
+    },
+    "guidelines": "Never use Inter. Maintain crisp legibility for numbers. Financial figures should use tabular lining if supported (e.g., 'tabular-nums' utility)."
+  },
+  "spacing_and_layout": {
+    "system": "8pt grid system. Generous spacing (p-6, p-8) within cards. Dense mode only applied to the actual Expense List rows.",
+    "mobile_container": "Always wrap main content in a container that allows easy reading on mobile (e.g., max-w-md mx-auto for desktop viewing, w-full for actual mobile devices).",
+    "surface_strategy": "Neumorphism & Soft Shadows. Use a 1px border (`border-border`) combined with `shadow-sm` on cards to ground them.",
+    "navigation": "Bottom Tab Navigation fixed to the bottom of the screen (`fixed bottom-0 w-full z-50`). 5 Tabs max: Home, List, Add (Prominent center FAB), Analytics, Settings."
+  },
+  "icons_and_assets": {
+    "library": "@phosphor-icons/react",
+    "style": "Duotone or Regular weight. Consistent stroke width.",
+    "installation_command": "yarn add @phosphor-icons/react"
+  },
+  "components": {
+    "cards": "Go mostly cardless for lists to maintain clean lines, but use Shadcn Card for summary blocks (Dashboard, Goals). Max 12px border-radius.",
+    "inputs": "Shadcn UI Form, Input, and Select components. Large touch targets (min-h-[44px]).",
+    "buttons": "Rounded-xl for primary actions. Use Primary color (#2C5545) sparingly, only for main CTA (e.g., 'Save Expense').",
+    "tabs": "Shadcn Tabs for switching between date periods (e.g., 'This Week', 'This Month'). Remove fixed heights from tablist.",
+    "badges": "For gamification, use custom circular divs with pastel background + dark icon, avoiding generic stock photos."
+  },
+  "charts_and_visualization": {
+    "library": "recharts (wrapped in Shadcn Chart if available)",
+    "bar_chart": "Per-category expense bar chart. X-axis: Categories. Y-axis: Amount. Include horizontal ReferenceLines for Min Goal and Max Goal (dashed lines, one green/safe, one red/danger).",
+    "monthly_progress": "A custom horizontal gauge or thick progress bar (h-6 rounded-full). Render three visual zones (0-Min, Min-Max, Over-Max) to quickly show where the user's total spend lies."
+  },
+  "screens": {
+    "Auth": "Clean vertical stack. Large welcoming H1. Organic plant illustration above the login form. Standard Email/Password inputs (local offline mock auth).",
+    "Dashboard": "Top: Greeting + Avatar. Middle: Monthly Progress Gauge card (This month's spend vs goals). Below: Quick 'Recent Expenses' list (max 3 items). Bottom: Small horizontal scroll of 'Recent Badges Earned'.",
+    "ExpenseList": "Sticky header with Date Filter tabs. Clean, dense list rows with icon, description, date, and ZAR (R) amount. Tap row opens a Shadcn Dialog/Drawer with full details + photo.",
+    "AddExpense": "Full-screen form. Date/Time pickers (Shadcn Popover + Calendar). Category select. Toggle for 'Recurring'. Button for 'Add Photo' (mock camera/gallery interaction).",
+    "Analytics": "Segmented control for period (Week/Month/Year). Main Bar Chart showing categories with Min/Max threshold lines layered over it. Category totals summary cards below.",
+    "Goals": "Simple sliders + numeric inputs for Min Monthly Goal and Max Monthly Goal.",
+    "Rewards": "Grid layout of Badges. Locked badges are grayscale/muted. Unlocked badges use full color (Gold/Terracotta accents) with timestamps.",
+    "Settings": "List of actions: Manage Categories, Manage Recurring Expenses, Export CSV, Logout."
+  },
+  "image_urls": {
+    "empty_state_illustration": {
+      "url": "https://images.unsplash.com/photo-1483794344563-d27a8d18014e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzF8MHwxfHNlYXJjaHwyfHxtaW5pbWFsaXN0JTIwcGxhbnQlMjBncm93dGh8ZW58MHx8fHwxNzgxNTI3NTM0fDA&ixlib=rb-4.1.0&q=85",
+      "description": "Minimalist green plant growing. Use for 'No expenses yet' or 'Clean slate' empty states."
+    },
+    "default_avatar": {
+      "url": "https://images.unsplash.com/photo-1740252117013-4fb21771e7ca?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjV8MHwxfHNlYXJjaHwxfHxibGFuayUyMHByb2ZpbGUlMjBhdmF0YXJ8ZW58MHx8fHwxNzgxNTI3NTM0fDA&ixlib=rb-4.1.0&q=85",
+      "description": "3D cartoon avatar profile image for the Dashboard header."
+    }
+  },
+  "accessibility_and_testing": {
+    "contrast": "Ensure all text meets minimum 4.5:1 against backgrounds.",
+    "data_testid": "MANDATORY. All interactive elements (buttons, inputs, tabs, lists) MUST have `data-testid` attributes (e.g., `data-testid='login-submit-btn'`, `data-testid='add-expense-amount-input'`, `data-testid='expense-item-1'`).",
+    "motion": "Use smooth, brief CSS transitions for hover states. Respect prefers-reduced-motion."
+  },
+  "instructions_to_main_agent": "Ensure the application feels like a native mobile app (use safe areas, bottom tab bar, no horizontal scrolling bugs). Ensure SQLite (or standard Web Storage / IndexedDB if adapted for web) is used for local persistence. Gamification logic should assign badges for first expense, staying under max goal for a week, etc. Do not use placeholder text or dummy URLs for images—use the ones provided."
+}
